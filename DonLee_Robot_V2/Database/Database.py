@@ -48,13 +48,18 @@ def unset(chat_id):
 	aambro.update_one({"_id":chat_id},{"$set":{"lg_code":None}})
 
 def find(chat_id):
-            id =  {"_id":chat_id}
-            x = aambro.find(id)
-            for i in x:
-                        return i["lg_code"] 
+	id =  {"_id":chat_id}
+	x = aambro.find(id)
+	for i in x:
+             lgcd = i["lg_code"]
+             return lgcd 
 
 def getid():
-            return [key["_id"] for key in aambro.find()]
+    values = []
+    for key  in aambro.find():
+         id = key["_id"]
+         values.append((id)) 
+    return values
 
 def find_one(id):
 	return aambro.find_one({"_id":id})
@@ -140,17 +145,17 @@ async def delete_filter(message, text, group_id):
 
 
 async def del_all(message, group_id, title):
-            if str(group_id) not in mydb.list_collection_names():
-                await message.edit_text(f"Nothing to remove in {title}!")
-                return
-
-            mycol = mydb[str(group_id)]
-            try:
-                        mycol.drop()
-                        await message.edit_text(f"All filters from {title} has been removed")
-            except:
-                        await message.edit_text("Couldn't remove all filters from group!")
-                        return
+    if str(group_id) not in mydb.list_collection_names():
+        await message.edit_text(f"Nothing to remove in {title}!")
+        return
+        
+    mycol = mydb[str(group_id)]
+    try:
+        mycol.drop()
+        await message.edit_text(f"All filters from {title} has been removed")
+    except:
+        await message.edit_text(f"Couldn't remove all filters from group!")
+        return
 
 
 async def count_filters(group_id):
@@ -164,142 +169,162 @@ async def count_filters(group_id):
 
 
 async def filter_stats():
-            collections = mydb.list_collection_names()
+    collections = mydb.list_collection_names()
 
-            if "CONNECTION" in collections:
-                collections.remove("CONNECTION")
-            if "USERS" in collections:
-                collections.remove("USERS")
+    if "CONNECTION" in collections:
+        collections.remove("CONNECTION")
+    if "USERS" in collections:
+        collections.remove("USERS")
 
-            totalcount = 0
-            for collection in collections:
-                        mycol = mydb[collection]
-                        count = mycol.count()
-                        totalcount += count
+    totalcount = 0
+    for collection in collections:
+        mycol = mydb[collection]
+        count = mycol.count()
+        totalcount = totalcount + count
 
-            totalcollections = len(collections)
+    totalcollections = len(collections)
 
-            return totalcollections, totalcount
+    return totalcollections, totalcount
 
 async def add_connection(group_id, user_id):
-            query = mycol.find_one(
-                { "_id": user_id },
-                { "_id": 0, "active_group": 0 }
+    query = mycol.find_one(
+        { "_id": user_id },
+        { "_id": 0, "active_group": 0 }
+    )
+    if query is not None:
+        group_ids = []
+        for x in query["group_details"]:
+            group_ids.append(x["group_id"])
+
+        if group_id in group_ids:
+            return False
+
+    group_details = {
+        "group_id" : group_id
+    }
+
+    data = {
+        '_id': user_id,
+        'group_details' : [group_details],
+        'active_group' : group_id,
+    }
+    
+    if mycol.count_documents( {"_id": user_id} ) == 0:
+        try:
+            mycol.insert_one(data)
+            return True
+        except:
+            print('Some error occured!')
+
+    else:
+        try:
+            mycol.update_one(
+                {'_id': user_id},
+                {
+                    "$push": {"group_details": group_details},
+                    "$set": {"active_group" : group_id}
+                }
             )
-            if query is not None:
-                        group_ids = [x["group_id"] for x in query["group_details"]]
-                        if group_id in group_ids:
-                            return False
-
-            group_details = {
-                "group_id" : group_id
-            }
-
-            data = {
-                '_id': user_id,
-                'group_details' : [group_details],
-                'active_group' : group_id,
-            }
-
-            if mycol.count_documents( {"_id": user_id} ) == 0:
-                try:
-                    mycol.insert_one(data)
-                    return True
-                except:
-                    print('Some error occured!')
-
-            else:
-                try:
-                    mycol.update_one(
-                        {'_id': user_id},
-                        {
-                            "$push": {"group_details": group_details},
-                            "$set": {"active_group" : group_id}
-                        }
-                    )
-                    return True
-                except:
-                    print('Some error occured!')
+            return True
+        except:
+            print('Some error occured!')
 
         
 async def active_connection(user_id):
 
-            query = mycol.find_one(
-                { "_id": user_id },
-                { "_id": 0, "group_details": 0 }
-            )
-            if not query:
-                        return None
-            group_id = query['active_group']
-            if group_id != None:
-                return int(group_id)
-            else:
-                return None
+    query = mycol.find_one(
+        { "_id": user_id },
+        { "_id": 0, "group_details": 0 }
+    )
+    if query:
+        group_id = query['active_group']
+        if group_id != None:
+            return int(group_id)
+        else:
+            return None
+    else:
+        return None
 
 async def all_connections(user_id):
-            query = mycol.find_one(
-                { "_id": user_id },
-                { "_id": 0, "active_group": 0 }
-            )
-            if query is not None:
-                        return [x["group_id"] for x in query["group_details"]]
-            else:
-                        return None
+    query = mycol.find_one(
+        { "_id": user_id },
+        { "_id": 0, "active_group": 0 }
+    )
+    if query is not None:
+        group_ids = []
+        for x in query["group_details"]:
+            group_ids.append(x["group_id"])
+        return group_ids
+    else:
+        return None
 
 
 async def if_active(user_id, group_id):
-            query = mycol.find_one(
-                { "_id": user_id },
-                { "_id": 0, "group_details": 0 }
-            )
-            return query is not None and query['active_group'] == group_id
+    query = mycol.find_one(
+        { "_id": user_id },
+        { "_id": 0, "group_details": 0 }
+    )
+    if query is not None:
+        if query['active_group'] == group_id:
+            return True
+        else:
+            return False
+    else:
+        return False
 
 
 async def make_active(user_id, group_id):
-            update = mycol.update_one(
-                {'_id': user_id},
-                {"$set": {"active_group" : group_id}}
-            )
-            return update.modified_count != 0
+    update = mycol.update_one(
+        {'_id': user_id},
+        {"$set": {"active_group" : group_id}}
+    )
+    if update.modified_count == 0:
+        return False
+    else:
+        return True
 
 
 async def make_inactive(user_id):
-            update = mycol.update_one(
-                {'_id': user_id},
-                {"$set": {"active_group" : None}}
-            )
-            return update.modified_count != 0
+    update = mycol.update_one(
+        {'_id': user_id},
+        {"$set": {"active_group" : None}}
+    )
+    if update.modified_count == 0:
+        return False
+    else:
+        return True
 
 async def delete_connection(user_id, group_id):
 
-            try:
-                        update = mycol.update_one(
-                            {"_id": user_id},
-                            {"$pull" : { "group_details" : {"group_id":group_id} } }
-                        )
-                        if update.modified_count == 0:
-                                    return False
-                        query = mycol.find_one(
-                            { "_id": user_id },
-                            { "_id": 0 }
-                        )
-                        if len(query["group_details"]) >= 1:
-                            if query['active_group'] == group_id:
-                                prvs_group_id = query["group_details"][len(query["group_details"]) - 1]["group_id"]
+    try:
+        update = mycol.update_one(
+            {"_id": user_id},
+            {"$pull" : { "group_details" : {"group_id":group_id} } }
+        )
+        if update.modified_count == 0:
+            return False
+        else:
+            query = mycol.find_one(
+                { "_id": user_id },
+                { "_id": 0 }
+            )
+            if len(query["group_details"]) >= 1:
+                if query['active_group'] == group_id:
+                    prvs_group_id = query["group_details"][len(query["group_details"]) - 1]["group_id"]
 
-                                mycol.update_one(
-                                    {'_id': user_id},
-                                    {"$set": {"active_group" : prvs_group_id}}
-                                )
-                        else:
-                            mycol.update_one(
-                                {'_id': user_id},
-                                {"$set": {"active_group" : None}}
-                            )
-                        return True
-            except Exception as e:
-                print(e)
-                return False
+                    mycol.update_one(
+                        {'_id': user_id},
+                        {"$set": {"active_group" : prvs_group_id}}
+                    )
+            else:
+                mycol.update_one(
+                    {'_id': user_id},
+                    {"$set": {"active_group" : None}}
+                )                    
+            return True
+    except Exception as e:
+        print(e)
+        return False
 
 async def add_user(id, username, name, dcid):
     data = {
@@ -315,7 +340,8 @@ async def add_user(id, username, name, dcid):
 
 
 async def all_users():
-            return aambro.count()
+    count = aambro.count()
+    return count
 
 
 async def find_user(id):
@@ -331,93 +357,99 @@ async def find_user(id):
         return None, None, None
 
 def split_quotes(text: str) -> List:
-            if not any(text.startswith(char) for char in START_CHAR):
-                        return text.split(None, 1)
-            counter = 1  # ignore first char -> is some kind of quote
-            while counter < len(text):
-                if text[counter] == "\\":
-                    counter += 1
-                elif text[counter] == text[0] or (text[0] == SMART_OPEN and text[counter] == SMART_CLOSE):
-                    break
+    if any(text.startswith(char) for char in START_CHAR):
+        counter = 1  # ignore first char -> is some kind of quote
+        while counter < len(text):
+            if text[counter] == "\\":
                 counter += 1
-            else:
-                return text.split(None, 1)
+            elif text[counter] == text[0] or (text[0] == SMART_OPEN and text[counter] == SMART_CLOSE):
+                break
+            counter += 1
+        else:
+            return text.split(None, 1)
 
-            # 1 to avoid starting quote, and counter is exclusive so avoids ending
-            key = remove_escapes(text[1:counter].strip())
-            # index will be in range, or `else` would have been executed and returned
-            rest = text[counter + 1:].strip()
-            if not key:
-                key = text[0] + text[0]
-            return list(filter(None, [key, rest]))
+        # 1 to avoid starting quote, and counter is exclusive so avoids ending
+        key = remove_escapes(text[1:counter].strip())
+        # index will be in range, or `else` would have been executed and returned
+        rest = text[counter + 1:].strip()
+        if not key:
+            key = text[0] + text[0]
+        return list(filter(None, [key, rest]))
+    else:
+        return text.split(None, 1)
 
 def parser(text, keyword):
-            if "buttonalert" in text:
-                text = (text.replace("\n", "\\n").replace("\t", "\\t"))
-            buttons = []
-            note_data = ""
-            prev = 0
-            i = 0
-            alerts = []
-            for match in BTN_URL_REGEX.finditer(text):
-                        # Check if btnurl is escaped
-                        n_escapes = 0
-                        to_check = match.start(1) - 1
-                        while to_check > 0 and text[to_check] == "\\":
-                            n_escapes += 1
-                            to_check -= 1
+    if "buttonalert" in text:
+        text = (text.replace("\n", "\\n").replace("\t", "\\t"))
+    buttons = []
+    note_data = ""
+    prev = 0
+    i = 0
+    alerts = []
+    for match in BTN_URL_REGEX.finditer(text):
+        # Check if btnurl is escaped
+        n_escapes = 0
+        to_check = match.start(1) - 1
+        while to_check > 0 and text[to_check] == "\\":
+            n_escapes += 1
+            to_check -= 1
 
-                                # if even, not escaped -> create button
-                        if n_escapes % 2 == 0:
-                                    note_data += text[prev:match.start(1)]
-                                    prev = match.end(1)
-                                    if match.group(3) == "buttonalert":
-                                                # create a thruple with button label, url, and newline status
-                                                if bool(match.group(5)) and buttons:
-                                                    buttons[-1].append(InlineKeyboardButton(
-                                                        text=match.group(2),
-                                                        callback_data=f"alertmessage:{i}:{keyword}"
-                                                    ))
-                                                else:
-                                                    buttons.append([InlineKeyboardButton(
-                                                        text=match.group(2),
-                                                        callback_data=f"alertmessage:{i}:{keyword}"
-                                                    )])
-                                                i += 1
-                                                alerts.append(match.group(4))
-                                    elif bool(match.group(5)) and buttons:
-                                                buttons[-1].append(InlineKeyboardButton(
-                                                    text=match.group(2),
-                                                    url=match.group(4).replace(" ", "")
-                                                ))
-                                    else:
-                                                buttons.append([InlineKeyboardButton(
-                                                    text=match.group(2),
-                                                    url=match.group(4).replace(" ", "")
-                                                )])
+        # if even, not escaped -> create button
+        if n_escapes % 2 == 0:
+            note_data += text[prev:match.start(1)]
+            prev = match.end(1)
+            if match.group(3) == "buttonalert":
+                # create a thruple with button label, url, and newline status
+                if bool(match.group(5)) and buttons:
+                    buttons[-1].append(InlineKeyboardButton(
+                        text=match.group(2),
+                        callback_data=f"alertmessage:{i}:{keyword}"
+                    ))
+                else:
+                    buttons.append([InlineKeyboardButton(
+                        text=match.group(2),
+                        callback_data=f"alertmessage:{i}:{keyword}"
+                    )])
+                i = i + 1
+                alerts.append(match.group(4))
+            else:
+                if bool(match.group(5)) and buttons:
+                    buttons[-1].append(InlineKeyboardButton(
+                        text=match.group(2),
+                        url=match.group(4).replace(" ", "")
+                    ))
+                else:
+                    buttons.append([InlineKeyboardButton(
+                        text=match.group(2),
+                        url=match.group(4).replace(" ", "")
+                    )])
 
-                        else:
-                                    note_data += text[prev:to_check]
-                                    prev = match.start(1) - 1
-            note_data += text[prev:]
+        # if odd, escaped -> move along
+        else:
+            note_data += text[prev:to_check]
+            prev = match.start(1) - 1
+    else:
+        note_data += text[prev:]
 
-            try:
-                return note_data, buttons, alerts
-            except:
-                return note_data, buttons, None
+    try:
+        return note_data, buttons, alerts
+    except:
+        return note_data, buttons, None
 
 def remove_escapes(text: str) -> str:
-            res = ""
+    counter = 0
+    res = ""
+    is_escaped = False
+    while counter < len(text):
+        if is_escaped:
+            res += text[counter]
             is_escaped = False
-            for counter in range(len(text)):
-                        if is_escaped:
-                            res += text[counter]
-                            is_escaped = False
-                        elif text[counter] == "\\":
-                            is_escaped = True
-                        else:
-                            res += text[counter]
-            return res
+        elif text[counter] == "\\":
+            is_escaped = True
+        else:
+            res += text[counter]
+        counter += 1
+    return res
 
 
 def humanbytes(size):
@@ -433,59 +465,59 @@ def humanbytes(size):
 
 
 async def donlee_imdb(query, bulk=False, id=False):
-            if not id:
-                # https://t.me/GetTGLink/4183
-                pattern = re.compile(r"^(([a-zA-Z\s])*)?\s?([1-2]\d\d\d)?", re.IGNORECASE)
-                match = pattern.match(query)
-                year = None
-                if match:
-                    title = match.group(1)
-                    year = match.group(3)
-                else:
-                    title = query
-                movieid = imdb.search_movie(title.lower(), results=10)
-                if not movieid:
-                    return None
-                if year:
-                    filtered=list(filter(lambda k: str(k.get('year')) == str(year), movieid))
-                    if not filtered:
-                        filtered = movieid
-                else:
-                    filtered = movieid
-                movieid=list(filter(lambda k: k.get('kind') in ['movie', 'tv series'], filtered))
-                if not movieid:
-                    movieid = filtered
-                if bulk:
-                    return movieid
-                movieid = movieid[0].movieID
-            else:
-                movieid = int(query)
-            movie = imdb.get_movie(movieid)
-            title = movie.get('title')
-            genres = ", ".join(movie.get("genres")) if movie.get("genres") else None
-            rating = str(movie.get("rating"))
-            if movie.get("original air date"):
-                date = movie["original air date"]
-            elif movie.get("year"):
-                date = movie.get("year")
-            else:
-                date = "N/A"
-            poster = movie.get('full-size cover url')
-            plot = movie.get('plot')
-            if plot and len(plot) > 0:
-                plot = plot[0]
-            if plot and len(plot) > 800:
-                        plot = plot[:800] + "..."
-            return {
-                'title': title,
-                'year': date,
-                'genres': genres,
-                'poster': poster,
-                'plot': plot,
-                'rating': rating,
-                'url':f'https://www.imdb.com/title/tt{movieid}'
+    if not id:
+        # https://t.me/GetTGLink/4183
+        pattern = re.compile(r"^(([a-zA-Z\s])*)?\s?([1-2]\d\d\d)?", re.IGNORECASE)
+        match = pattern.match(query)
+        year = None
+        if match:
+            title = match.group(1)
+            year = match.group(3)
+        else:
+            title = query
+        movieid = imdb.search_movie(title.lower(), results=10)
+        if not movieid:
+            return None
+        if year:
+            filtered=list(filter(lambda k: str(k.get('year')) == str(year), movieid))
+            if not filtered:
+                filtered = movieid
+        else:
+            filtered = movieid
+        movieid=list(filter(lambda k: k.get('kind') in ['movie', 'tv series'], filtered))
+        if not movieid:
+            movieid = filtered
+        if bulk:
+            return movieid
+        movieid = movieid[0].movieID
+    else:
+        movieid = int(query)
+    movie = imdb.get_movie(movieid)
+    title = movie.get('title')
+    genres = ", ".join(movie.get("genres")) if movie.get("genres") else None
+    rating = str(movie.get("rating"))
+    if movie.get("original air date"):
+        date = movie["original air date"]
+    elif movie.get("year"):
+        date = movie.get("year")
+    else:
+        date = "N/A"
+    poster = movie.get('full-size cover url')
+    plot = movie.get('plot')
+    if plot and len(plot) > 0:
+        plot = plot[0]
+    if plot and len(plot) > 800:
+        plot = plot[0:800] + "..."
+    return {
+        'title': title,
+        'year': date,
+        'genres': genres,
+        'poster': poster,
+        'plot': plot,
+        'rating': rating,
+        'url':f'https://www.imdb.com/title/tt{movieid}'
 
-            }
+    }
 
 async def send_msg(user_id, message):
     try:
@@ -548,13 +580,14 @@ class Database:
         user = self.new_user(id)
         await self.dcol.insert_one(user)
     async def is_user_exist(self, id):
-                user = await self.dcol.find_one({'id':int(id)})
-                return bool(user)
+        user = await self.dcol.find_one({'id':int(id)})
+        return True if user else False
     async def total_users_count(self):
         count = await self.dcol.count_documents({})
         return count
     async def get_all_users(self):
-                return self.dcol.find({})
+        all_users = self.dcol.find({})
+        return all_users
     async def delete_user(self, user_id):
         await self.dcol.delete_many({'id': int(user_id)})
     async def create_index(self):
@@ -592,28 +625,28 @@ class Database:
             )
         )
     async def status(self, group_id: int):
-                """
+        """
         Get the total filters, total connected
         chats and total active chats of a chat
         """
-                group_id = int(group_id)
-
-                total_filter = await self.tf_count(group_id)
-
-                chats = await self.find_chat(group_id)
-                chats = chats.get("chat_ids")
-                total_chats = len(chats) if chats is not None else 0
-
-                achats = await self.find_active(group_id)
-                if achats not in (None, False):
-                            achats = achats.get("chats")
-                            if achats is None:
-                                        achats = []
-                else:
-                            achats = []
-                total_achats = len(achats)
-
-                return total_filter, total_chats, total_achats
+        group_id = int(group_id)
+        
+        total_filter = await self.tf_count(group_id)
+        
+        chats = await self.find_chat(group_id)
+        chats = chats.get("chat_ids")
+        total_chats = len(chats) if chats is not None else 0
+        
+        achats = await self.find_active(group_id)
+        if achats not in (None, False):
+            achats = achats.get("chats")
+            if achats == None:
+                achats = []
+        else:
+            achats = []
+        total_achats = len(achats)
+        
+        return total_filter, total_chats, total_achats
     async def find_group_id(self, channel_id: int):
         """
         Find all group id which is connected to a channel 
@@ -702,21 +735,24 @@ class Database:
 
 
     async def in_db(self, group_id: int, channel_id: int):
-                """
+        """
         Check whether if the given channel id is in db or not...
         """
-                connections = self.cache.get(group_id)
+        connections = self.cache.get(group_id)
+        
+        if connections is None:
+            connections = await self.col.find_one({'_id': group_id})
+        
+        check_list = []
+        
+        if connections:
+            for x in connections["chat_ids"]:
+                check_list.append(int(x.get("chat_id")))
 
-                if connections is None:
-                    connections = await self.col.find_one({'_id': group_id})
-
-                if connections:
-                            check_list = [int(x.get("chat_id")) for x in connections["chat_ids"]]
-
-                            if int(channel_id) in check_list:
-                                return True
-
-                return False
+            if int(channel_id) in check_list:
+                return True
+        
+        return False
 
 
     async def update_settings(self, group_id: int, settings):
@@ -816,17 +852,19 @@ class Database:
 
 
     async def del_active(self, group_id: int, channel_id: int):
-                """
+        """
         A funtion to delete a channel from active chat colletion in db
         """
-                templ = {"$pull": {"chats": dict(chat_id = channel_id)}}
-
-                try:
-                            await self.acol.update_one({"_id": group_id}, templ, False, True)
-                except Exception as e:
-                            print(e)
-                await self.refresh_acache(group_id)
-                return True
+        templ = {"$pull": {"chats": dict(chat_id = channel_id)}}
+        
+        try:
+            await self.acol.update_one({"_id": group_id}, templ, False, True)
+        except Exception as e:
+            print(e)
+            pass
+        
+        await self.refresh_acache(group_id)
+        return True
 
 
     async def update_active(self, group_id: int, channel_id: int, channel_name):
@@ -865,15 +903,20 @@ class Database:
 
 
     async def in_active(self, group_id: int, channel_id: int):
-                """
+        """
         A Funtion to check if a chat id is in the active
         chat id list in db
         """
-                prev = await self.acol.find_one({"_id": group_id})
-
-                if prev:
-                            return any(x["chat_id"] == channel_id for x in prev["chats"])
-                return False
+        prev = await self.acol.find_one({"_id": group_id})
+        
+        if prev:
+            for x in prev["chats"]:
+                if x["chat_id"] == channel_id:
+                    return True
+            
+            return False
+        
+        return False
 
 
     async def delall_active(self, group_id: int):
@@ -938,44 +981,47 @@ class Database:
 
 
     async def get_filters(self, group_id: int, keyword: str):
-                """
+        """
         A Funtion to fetch all similar results for a keyowrd
         from using text index
         """
-                await self.create_index()
+        await self.create_index()
 
-                chat = await self.find_chat(group_id)
-                chat_accuracy = float(chat["configs"].get("accuracy", 0.80))
-                achats = await self.find_active(group_id)
+        chat = await self.find_chat(group_id)
+        chat_accuracy = float(chat["configs"].get("accuracy", 0.80))
+        achats = await self.find_active(group_id)
+        
+        achat_ids=[]
+        if not achats:
+            return False
+        
+        for chats in achats["chats"]:
+            achat_ids.append(chats.get("chat_id"))
+        
+        filters = []
+                
+        pipeline= {
+            'group_id': int(group_id), '$text':{'$search': keyword}
+        }
+        
+        
+        db_list = self.fcol.find(
+            pipeline, 
+            {'score': {'$meta':'textScore'}} # Makes A New Filed With Match Score In Each Document
+        )
 
-                if not achats:
-                    return False
+        db_list.sort([("score", {'$meta': 'textScore'})]) # Sort all document on the basics of the score field
+        
+        for document in await db_list.to_list(length=600):
+            if document["score"] < chat_accuracy:
+                continue
+            
+            if document["chat_id"] in achat_ids:
+                filters.append(document)
+            else:
+                continue
 
-                achat_ids = [chats.get("chat_id") for chats in achats["chats"]]
-                filters = []
-
-                pipeline= {
-                    'group_id': int(group_id), '$text':{'$search': keyword}
-                }
-
-
-                db_list = self.fcol.find(
-                    pipeline, 
-                    {'score': {'$meta':'textScore'}} # Makes A New Filed With Match Score In Each Document
-                )
-
-                db_list.sort([("score", {'$meta': 'textScore'})]) # Sort all document on the basics of the score field
-
-                for document in await db_list.to_list(length=600):
-                    if document["score"] < chat_accuracy:
-                        continue
-
-                    if document["chat_id"] in achat_ids:
-                        filters.append(document)
-                    else:
-                        continue
-
-                return filters
+        return filters
 
 
     async def get_file(self, unique_id: str):

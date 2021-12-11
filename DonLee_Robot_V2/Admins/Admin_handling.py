@@ -70,28 +70,30 @@ def button_markdown_parser(msg: Message) -> (str, List):
         else:
             note_data += markdown_note[prev:to_check]
             prev = match.start(1) - 1
-    note_data += markdown_note[prev:]
+    else:
+        note_data += markdown_note[prev:]
 
     return note_data, buttons
 
 
 def extract_time(time_val):
-    if not any(time_val.endswith(unit) for unit in ('s', 'm', 'h', 'd')):
-        return None
-    unit = time_val[-1]
-    time_num = time_val[:-1]  # type: str
-    if not time_num.isdigit():
-        return None
+    if any(time_val.endswith(unit) for unit in ('s', 'm', 'h', 'd')):
+        unit = time_val[-1]
+        time_num = time_val[:-1]  # type: str
+        if not time_num.isdigit():
+            return None
 
-    if unit == 's':
-        bantime = int(time.time() + int(time_num))
-    elif unit == 'm':
-        bantime = int(time.time() + int(time_num) * 60)
-    elif unit == 'h':
-        bantime = int(time.time() + int(time_num) * 60 * 60)
-    elif unit == 'd':
-        bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
+        if unit == 's':
+            bantime = int(time.time() + int(time_num))
+        elif unit == 'm':
+            bantime = int(time.time() + int(time_num) * 60)
+        elif unit == 'h':
+            bantime = int(time.time() + int(time_num) * 60 * 60)
+        elif unit == 'd':
+            bantime = int(time.time() + int(time_num) * 24 * 60 * 60)
+        else:
+            # how even...?
+            return None
+        return bantime
     else:
-        # how even...?
         return None
-    return bantime

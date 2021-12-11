@@ -40,7 +40,7 @@ async def purge(client, message):
                 )
                 count_del_etion_s += len(message_ids)
                 message_ids = []
-        if message_ids:
+        if len(message_ids) > 0:
             await client.delete_messages(
                 chat_id=message.chat.id,
                 message_ids=message_ids,

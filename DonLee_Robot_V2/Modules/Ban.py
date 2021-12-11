@@ -48,7 +48,7 @@ async def temp_ban_user(_, message):
     if not is_admin:
         return
 
-    if len(message.command) <= 1:
+    if not len(message.command) > 1:
         return
 
     user_id, user_first_name = extract_user(message)

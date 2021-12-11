@@ -1,0 +1,127 @@
+{
+    "name": "DonLee-Robot-V2",
+    "description": "A AutoFilter & Manual Filers Donlee Robot V2",
+    "logo": "https://telegra.ph/file/7213699d811662dd57e36.jpg",
+    "stack": "container",
+    "keywords": [
+        "Auto",
+        "Filter",
+        "&",
+        "ManualFilter",
+        "Donlee",
+        "Robot",
+        "V2",
+        "Telegram",
+        "Bot"
+    ],
+    "website": "https://youtube.com/c/MoTech_YT",
+    "repository": "https://github.com/PR0FESS0R-99/DonLee-Robot-V2",
+    "success_url": "https://youtube.com/c/MoTech_YT",
+    "env": {
+        "API_ID": {
+            "description": "Your APP ID From my.telegram.org or @MT_MytelegramOrg_Bot",
+            "value": ""
+        },
+        "API_HASH": {
+            "description": "Your API Hash From my.telegram.org or @MT_MytelegramOrg_Bot",
+            "value": ""
+        },
+        "BOT_TOKEN": {
+            "description": "Your Bot Token From @BotFather",
+            "value": ""
+        },
+        "SESSION_FILE": {
+            "description": "SESSION_FILE From https://youtu.be/WUN_12-dYOM",
+            "value": ""
+        },
+        "DATABASE_URI": {
+            "description": "DATABASE_URI From https://youtu.be/gBLTsH-IXr0",
+            "value": ""
+        },
+        "FORCE_CHANNEL": {
+            "description": "FORCE_CHANNEL Your Update Channel (without @)",
+            "value": "MO_TECH_YT"
+        },
+        "CUSTOM_CAPTION": {
+            "description": "file Custom Caption",
+            "value": "",
+            "required": false
+        },
+        "BOT_USERNAME": {
+            "description": "BOT_USERNAME Your Bot User Name From Botfather",
+            "value": "DonLee_Robot",
+            "required": false
+        },
+        "DEV_USERNAME": {
+            "description": "Master (your) Telagarm Useraname from @MT_ID_Bot (Without @)",
+            "value": "Mrk_YT",
+            "required": false
+        },
+        "DEV_NAME": {
+            "description": "Your Name DEV_NAME",
+            "value": "𝖬𝗎𝗁𝖺𝗆𝗆𝖾𝖽",
+            "required": false
+        },
+        "DEV_ID1": {
+            "description": "Master (your) Telagarm id from @MT_ID_Bot (Without @) (split id)",
+            "value": "2028425293",
+            "required": false
+        },
+        "DEV_ID2": {
+            "description": "Master (your) Telagarm id from @MT_ID_Bot (Without @)",
+            "value": "2028425293",
+            "required": false
+        },
+        "GROUP_LINK": {
+            "description": "Your Telagarm Group Link (Without @)",
+            "value": "",
+            "required": false
+        },
+        "FORCE_TEXT": {
+            "description": "Force Text Demo (Your Not Join My Update Channel)",
+            "value": "ഹേയ് {} തായേ കാണുന്ന ചാനലിൽ നിങ്ങൾ ഇല്ല അത് കൊണ്ട് നിങ്ങൾക് സിനിമ കിട്ടില്ല...!    സിനിമ കിട്ടാനായി താഴെ കാണുന്ന 🔔 Join എന്ന ബട്ടനിൽ ക്ലിക്ക് ചെയ്തു ഞങ്ങളുടെ മെയിൻ ചാനലിൽ ജോയിൻ ചെയ്യുക എങ്കിൽ മാത്രമേ നിങ്ങൾക്ക് മൂവി ഈ ബോട്ട് വഴി ലഭിക്കുകയുള്ളു. അതു കഴ്ഞ്ഞു തായേ കാണുന്ന 👉'Try again'👈 എന്നുള്ളതിൽ ക്ലിക്ക് ചെയ്തു Start കൊടുത്താൽ നിങ്ങൾക്ക് മൂവി കിട്ടുന്നതാണ്...😁😁",
+            "required": false
+        },
+        "WELCOME_ENABLE_OR_DISABLE": {
+            "description": "Do you want a welcome message? Type on if necessary and off if not required",
+            "value": "no",
+            "required": false
+        },
+        "WELCOME_TEXT": {
+            "description": "Set Your Custom Welcome Text (User Name = {mention} || Group Name {groupname}",
+            "value": "",
+            "required": false
+        },
+        "SPELLING_MODE_TEXT": {
+            "description": "Spelling Mode Text (Google Spelling Mode)",
+            "value": "",
+            "required": false
+        },
+        "PHOTOS": {
+            "description": "Bot Pics (Start Help about) random pics @MT_Telegraph_Bot",
+            "value": "",
+            "required": false
+        },
+        "FILE_BUTTONS": {
+            "description": "File Buttons dual Or single",
+            "value": "",
+            "required": false
+        },
+        "FILE_CAPTION": {
+            "description": "File Caption bold or mono",
+            "value": "",
+            "required": false
+        }
+    },
+    "buildpacks": [
+        {
+            "url": "heroku/python"
+        }
+    ],
+    "formation": {
+        "worker": {
+            "quantity": 1,
+            "size": "free"
+        }
+    }
+}

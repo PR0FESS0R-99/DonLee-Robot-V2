@@ -38,19 +38,23 @@ async def addfilter(client, message):
         else:
             await message.reply_text("𝖨'𝗆 𝗇𝗈𝗍 𝖼𝗈𝗇𝗇𝖾𝖼𝗍𝖾𝖽 𝗍𝗈 𝖺𝗇𝗒 𝗀𝗋𝗈𝗎𝗉𝗌!", quote=True)
             return
-    elif (chat_type == "group") or (chat_type == "supergroup"):
+    elif chat_type in ["group", "supergroup"]:
         grp_id = message.chat.id
         title = message.chat.title
     else:
         return
     st = await client.get_chat_member(grp_id, userid)
-    if not ((st.status == "administrator") or (st.status == "creator") or (str(userid) in Config.DEV_ID)):
+    if (
+        st.status != "administrator"
+        and st.status != "creator"
+        and str(userid) not in Config.DEV_ID
+    ):
         return
     if len(args) < 2:
         await message.reply_text("https://youtu.be/neJ4jHC9Hng", quote=True)
-        return    
+        return
     extracted = split_quotes(args[1])
-    text = extracted[0].lower()   
+    text = extracted[0].lower()
     if not message.reply_to_message and len(extracted) < 2:
         await message.reply_text("𝖠𝖽𝖽 𝗌𝗈𝗆𝖾 𝖼𝗈𝗇𝗍𝖾𝗇𝗍 𝗍𝗈 𝗌𝖺𝗏𝖾 𝗒𝗈𝗎𝗋 𝖿𝗂𝗅𝗍𝖾𝗋!", quote=True)
         return
@@ -140,7 +144,7 @@ async def addfilter(client, message):
             alert = None
 
     else:
-        return    
+        return
     await add_filter(grp_id, text, reply_text, btn, fileid, alert)
     await message.reply_text(
         f"`{text}` 𝖠𝖽𝖽𝖾𝖽 𝗂𝗇  **{title}**",
@@ -166,14 +170,18 @@ async def get_all(client, message):
         else:
             await message.reply_text("𝖨'𝗆 𝗇𝗈𝗍 𝖼𝗈𝗇𝗇𝖾𝖼𝗍𝖾𝖽 𝗍𝗈 𝖺𝗇𝗒 𝗀𝗋𝗈𝗎𝗉𝗌!", quote=True)
             return
-    elif (chat_type == "group") or (chat_type == "supergroup"):
+    elif chat_type in ["group", "supergroup"]:
         grp_id = message.chat.id
         title = message.chat.title
     else:
         return
     userid = message.from_user.id
     st = await client.get_chat_member(grp_id, userid)
-    if not ((st.status == "administrator") or (st.status == "creator") or (str(userid) in Config.AUTH_USERS)):
+    if (
+        st.status != "administrator"
+        and st.status != "creator"
+        and str(userid) not in Config.AUTH_USERS
+    ):
         return
     texts = await get_filters(grp_id)
     count = await count_filters(grp_id)
@@ -216,7 +224,7 @@ async def deletefilter(client, message):
         else:
             await message.reply_text("𝖨'𝗆 𝗇𝗈𝗍 𝖼𝗈𝗇𝗇𝖾𝖼𝗍𝖾𝖽 𝗍𝗈 𝖺𝗇𝗒 𝗀𝗋𝗈𝗎𝗉𝗌!", quote=True)
 
-    elif (chat_type == "group") or (chat_type == "supergroup"):
+    elif chat_type in ["group", "supergroup"]:
         grp_id = message.chat.id
         title = message.chat.title
 
@@ -224,7 +232,11 @@ async def deletefilter(client, message):
         return
 
     st = await client.get_chat_member(grp_id, userid)
-    if not ((st.status == "administrator") or (st.status == "creator") or (str(userid) in Config.AUTH_USERS)):
+    if (
+        st.status != "administrator"
+        and st.status != "creator"
+        and str(userid) not in Config.AUTH_USERS
+    ):
         return
 
     try:
@@ -261,7 +273,7 @@ async def delallconfirm(client, message):
             await message.reply_text("𝖨'𝗆 𝗇𝗈𝗍 𝖼𝗈𝗇𝗇𝖾𝖼𝗍𝖾𝖽 𝗍𝗈 𝖺𝗇𝗒 𝗀𝗋𝗈𝗎𝗉𝗌!", quote=True)
             return
 
-    elif (chat_type == "group") or (chat_type == "supergroup"):
+    elif chat_type in ["group", "supergroup"]:
         grp_id = message.chat.id
         title = message.chat.title
 
@@ -598,20 +610,20 @@ async def gen_invite_links(db, group_id, bot, update):
     """
     chats = db.get("chat_ids")
     global INVITE_LINK
-    
+
     if INVITE_LINK.get(str(group_id)):
         return
-    
+
     Links = []
     if chats:
         for x in chats:
             Name = x["chat_name"]
-            
-            if Name == None:
+
+            if Name is None:
                 continue
-            
+
             chatId=int(x["chat_id"])
-            
+
             Link = await bot.export_chat_invite_link(chatId)
             Links.append({"chat_id": chatId, "chat_name": Name, "invite_link": Link})
 
@@ -628,35 +640,32 @@ async def recacher(group_id, ReCacheInvite=True, ReCacheActive=False, bot=DonLee
     if ReCacheInvite:
         if INVITE_LINK.get(str(group_id)):
             INVITE_LINK.pop(str(group_id))
-        
-        Links = []
+
         chats = await db.find_chat(group_id)
         chats = chats["chat_ids"]
-        
+
         if chats:
+            Links = []
             for x in chats:
                 Name = x["chat_name"]
                 chat_id = x["chat_id"]
-                if (Name == None or chat_id == None):
+                if Name is None or chat_id is None:
                     continue
-                
+
                 chat_id = int(chat_id)
-                
+
                 Link = await bot.export_chat_invite_link(chat_id)
                 Links.append({"chat_id": chat_id, "chat_name": Name, "invite_link": Link})
 
             INVITE_LINK[str(group_id)] = Links
-    
+
     if ReCacheActive:
         
         if ACTIVE_CHATS.get(str(group_id)):
             ACTIVE_CHATS.pop(str(group_id))
-        
+
         achats = await db.find_active(group_id)
-        achatId = []
         if achats:
-            for x in achats["chats"]:
-                achatId.append(int(x["chat_id"]))
-            
+            achatId = [int(x["chat_id"]) for x in achats["chats"]]
             ACTIVE_CHATS[str(group_id)] = achatId
     return

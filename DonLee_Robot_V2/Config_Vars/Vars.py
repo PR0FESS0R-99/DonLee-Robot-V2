@@ -8,22 +8,24 @@ import os
 import time
 from DonLee_Robot_V2 import Text
 
-class Config(object):
+
+
+class Config((object)):
     API_ID = int(os.environ.get("API_ID", 12345))
     API_HASH = os.environ.get("API_HASH")
-    BOT_TOKEN = os.environ.get("BOT_TOKEN") 
+    BOT_TOKEN = os.environ.get("BOT_TOKEN")
     USER_SESSION = os.environ.get("SESSION_FILE")
 
 
     # store 
-    DATABASE = os.environ.get("DATABASE_URI")   
+    DATABASE = os.environ.get("DATABASE_URI")
     # from forces subscriber );
     FORCE_SUB_TEXT = os.environ.get("FORCE_TEXT", Text.FORCE_SUB_TEXT)
     FORCE_CHANNEL = os.environ.get("FORCE_CHANNEL", "Mo_Tech_YT")
     # seplling mode
     SPELLING_MODE = os.environ.get("SPELLING_MODE_TEXT", Text.SPELLING_TEXT)
     # from Bot Deploying User
-    DEV_ID = set(int(x) for x in os.environ.get("DEV_ID1", "2028425293").split())
+    DEV_ID = {int(x) for x in os.environ.get("DEV_ID1", "2028425293").split()}
     DEV_NAME = os.environ.get("DEV_NAME", "𝖬𝗎𝗁𝖺𝗆𝗆𝖾𝖽 𝖱𝖪")
     OW_ID = int(os.environ.get("DEV_ID2", "2028425293"))
     DEV_USERNAME = os.environ.get("DEV_USERNAME", "Mrk_YT")
@@ -41,8 +43,8 @@ class Config(object):
     TMP_DOWNLOAD_DIRECTORY = os.environ.get("TMP_DOWNLOAD_DIRECTORY","./DOWNLOADS/")
 
     # User
-    MAX_USER = set(int(x) for x in os.environ.get("SUDO_USERS", "").split())
-    COMMAND_HAND_LER = os.environ.get("COMMAND_HAND_LER", "/") 
+    MAX_USER = {int(x) for x in os.environ.get("SUDO_USERS", "").split()}
+    COMMAND_HAND_LER = os.environ.get("COMMAND_HAND_LER", "/")
     MAX_SELECT_LEN = 100
     TG_MAX_SELECT_LEN = int(MAX_SELECT_LEN)
     SUDO_USERS = list(MAX_USER)
@@ -62,6 +64,6 @@ class Config(object):
 
     SAVE_USER = os.environ.get("SAVE_USER", "no").lower()
     BUTTON_MODE = os.environ.get("FILE_BUTTONS", "single").lower()
-    
+
     # network time (Indian)
     Up_Time = time.time()

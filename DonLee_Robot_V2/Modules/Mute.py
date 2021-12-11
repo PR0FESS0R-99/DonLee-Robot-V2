@@ -51,7 +51,7 @@ async def temp_mute_user(_, message):
     if not is_admin:
         return
 
-    if not len(message.command) > 1:
+    if len(message.command) <= 1:
         return
 
     user_id, user_first_name = extract_user(message)

@@ -2,7 +2,6 @@
     "name": "DonLee-Robot-V2",
     "description": "A AutoFilter & Manual Filers Donlee Robot V2",
     "logo": "https://telegra.ph/file/7213699d811662dd57e36.jpg",
-    "stack": "container",
     "keywords": [
         "Auto",
         "Filter",

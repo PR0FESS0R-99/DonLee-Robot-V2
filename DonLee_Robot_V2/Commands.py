@@ -35,7 +35,7 @@ async def start(bot: DonLee_Robot_V2, msg: Import.Msg):
         except Import.User:
             userbot = await bot.get_me()
             await msg.reply_text(
-                text=Config.FORCE_SUB_TEXT.format(message.from_user.mention),
+                text=Config.FORCE_SUB_TEXT.format(msg.from_user.mention),
                 reply_markup=Import.Markup([
                     [ Import.Button(text="🔔 𝖩𝗈𝗂𝗇", url=f"https://t.me/{Config.FORCE_CHANNEL}"),
                       Import.Button(text="𝖱𝖾𝖿𝗋𝖾𝗌𝗁 🔃", url=f"https://t.me/{Config.BOT_USERNAME}?start={file_uid}")]       

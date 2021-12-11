@@ -20,7 +20,7 @@ ACTIVE_CHATS = {}
 
 db = Database()
 
-@DonLee_Robot_V2.on_message(filters.command("addfilter"))
+@DonLee_Robot_V2.on_message(filters.command("addfilter", "filter"))
 async def addfilter(client, message):
     userid = message.from_user.id
     chat_type = message.chat.type

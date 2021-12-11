@@ -25,7 +25,7 @@ async def start(bot: DonLee_Robot_V2, msg: Import.Msg):
         file_uid = msg.command[1]
     except IndexError:
         file_uid = False
-             
+
     if file_uid:
         try:
             user = await bot.get_chat_member(Config.FORCE_CHANNEL, msg.chat.id)
@@ -44,8 +44,8 @@ async def start(bot: DonLee_Robot_V2, msg: Import.Msg):
             return
 
         file_id, file_name, file_caption, file_type = await db.get_file(file_uid)
-        
-        if (file_id or file_type) == None:
+
+        if ((file_id or file_type)) is None:
             return
 
         if Config.CAPTION_BOLD_OR_MONO == "bold":

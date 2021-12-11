@@ -31,7 +31,4 @@ async def admin_check(message: Message) -> bool:
         "administrator"
     ]
 
-    if check_status.status not in admin_strings:
-        return False
-    else:
-        return True
+    return check_status.status in admin_strings

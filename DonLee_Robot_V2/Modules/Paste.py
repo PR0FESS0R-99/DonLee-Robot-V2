@@ -51,13 +51,13 @@ async def pasty(client, message):
             m_list = open(file, "r").read()
             message_s = m_list
             os.remove(file)
-        elif message.reply_to_message.text:
+        else:
             message_s = message.reply_to_message.text
-    
+
     ext = "py"
     x = await p_paste(message_s, ext)
     p_link = x["url"]
     p_raw = x["raw"]
-    
+
     pasted = f"""𝖲𝗎𝖼𝖼𝖾𝗌𝗌𝖿𝗎𝗅𝗅𝗒 𝖯𝖺𝗌𝗍𝖾 𝗍𝗈 𝖯𝖺𝗌𝗍𝗒\n\n Link:- <a href=f"{p_link}">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</a>\n\nRaw Link:- <a href=f"{p_raw}">𝖢𝗅𝗂𝖼𝗄 𝖧𝖾𝗋𝖾</a>"""
     await pablo.edit(pasted, disable_web_page_preview=True)

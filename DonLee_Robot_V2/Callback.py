@@ -50,7 +50,8 @@ async def cb_handler(client, query):
           Import.Button("𝖳𝖳𝖲", callback_data="tts"),
           Import.Button("𝖲𝗍𝗂𝖼𝗄𝖾𝗋 𝖨𝖽", callback_data="sticker")
           ],[
-          Import.Button("𝖢𝗈𝗎𝗇𝗍𝗋𝗒", callback_data="country")
+          Import.Button("𝖢𝗈𝗎𝗇𝗍𝗋𝗒", callback_data="country"),
+          Import.Button("𝖬𝖾𝗆𝖾", callback_data="meme")
           ],[
           Import.Button("𝖢𝗈𝗏𝗂𝖽", callback_data="covid"),
           Import.Button("𝖱𝖾𝗉𝗈𝗋𝗍", callback_data="report"),
@@ -172,7 +173,13 @@ async def cb_handler(client, query):
           ]]
         await query.message.edit_text(Text.SOURCE_TEXT, reply_markup=Import.Markup(button))
 
-    elif query.data == "county":
+    elif query.data == "meme":
+        button = [[
+          Import.Button("🔙 𝖡𝖺𝖼𝗄", callback_data="help")
+          ]]
+        await query.message.edit_text(Text.MEME_TEXT, reply_markup=Import.Markup(button))
+
+    elif query.data == "country":
         button = [[
           Import.Button("🔙 𝖡𝖺𝖼𝗄", callback_data="help")
           ]]

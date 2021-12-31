@@ -86,7 +86,7 @@ Click on the Help Button or <a href="https://telegram.dog/Donlee_Robot">/help</a
 </p>
 
 <p align="center">
-<a href="https://www.youtube.com/redirect?event=video_description&redir_token=QUFFLUhqay1XMVU4Rmx6MVltYjU5VGpFYWhXd3NkcGtiQXxBQ3Jtc0trdnRKSEYwNzRiXzV5WFE0a09oX2t6Q21fSC1UUGZiZDJ0d29JX29IX1VhWFUxLUhxT0ZacWpXM2tHNmFnZ25GSEF5UjB3ZFRuT3hoODFZajMzeG01ZzA0LXdWUVozRVRGSEFKUTJCb1lOaUt6LVRSNA&q=https%3A%2F%2Fheroku.com%2Fdeploy%3Ftemplate%3Dhttps%3A%2F%2Fgithub.com%2FPR0FESS0R-99%2FDonLee-Robot-V2"><img src="https://github.com/PR0FESS0R-99/Buttons/blob/Professor-99/heroku/herokudeploy-01.svg" alt="PR0FESS0R-99" border="0" height="125" width="200" align="center" /></a>
+<a href="https://dashboard.heroku.com/new?button-url=https%3A%2F%2Fm.youtube.com%2F&template=https%3A%2F%2Fgithub.com%2FPR0FESS0R-99%2FDonLee-Robot-V2"><img src="https://github.com/PR0FESS0R-99/Buttons/blob/Professor-99/heroku/herokudeploy-01.svg" alt="PR0FESS0R-99" border="0" height="125" width="200" align="center" /></a>
 </p>
 
 ----

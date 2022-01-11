@@ -27,42 +27,6 @@ async def roll_dice(client, message):
         reply_to_message_id=rep_mesg_id
     )
 
-@DonLee_Robot_V2.on_message(filters.command(["basketball", "basket"], Config.COMMAND_HAND_LER) & f_onw_fliter)
-async def basketball_dice(client, message):
-    rep_mesg_id = message.message_id
-    if message.reply_to_message:
-        rep_mesg_id = message.reply_to_message.message_id
-    await client.send_dice(
-        chat_id=message.chat.id,
-        emoji=Text.DICE_E_MOJI_3,
-        disable_notification=True,
-        reply_to_message_id=rep_mesg_id
-    )
-
-@DonLee_Robot_V2.on_message(filters.command(["shoot", "goal"], Config.COMMAND_HAND_LER) & f_onw_fliter)
-async def goal_dice(client, message):
-    rep_mesg_id = message.message_id
-    if message.reply_to_message:
-        rep_mesg_id = message.reply_to_message.message_id
-    await client.send_dice(
-        chat_id=message.chat.id,
-        emoji=Text.DICE_E_MOJI_4,
-        disable_notification=True,
-        reply_to_message_id=rep_mesg_id
-    )
-
-@DonLee_Robot_V2.on_message(filters.command(["luck", "cownd"], Config.COMMAND_HAND_LER) & f_onw_fliter)
-async def luck_dice(client, message):
-    rep_mesg_id = message.message_id
-    if message.reply_to_message:
-        rep_mesg_id = message.reply_to_message.message_id
-    await client.send_dice(
-        chat_id=message.chat.id,
-        emoji=Text.DICE_E_MOJI_5,
-        disable_notification=True,
-        reply_to_message_id=rep_mesg_id
-    )
-
 @DonLee_Robot_V2.on_message(filters.command("runs", Config.COMMAND_HAND_LER) & f_onw_fliter)
 async def runs(_, message):
     effective_string = random.choice(Text.RUN_STRINGS)

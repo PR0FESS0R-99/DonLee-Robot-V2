@@ -69,22 +69,22 @@ class Text(object):
 <𝖼𝗈𝖽𝖾>(𝖶𝗈𝗋𝗄𝗌 𝖮𝗇𝗅𝗒 𝖨𝗇 𝖦𝗋𝗈𝗎𝗉𝗌):</𝖼𝗈𝖽𝖾>
 
 <𝖻><𝗎>𝖠𝖽𝖽 𝖢𝖬𝖣</𝖻></𝗎>
-• <𝖼𝗈𝖽𝖾>/addchannel </𝖼𝗈𝖽𝖾><𝖻>𝖼𝗁𝖺𝗍_𝗂𝖽</𝖻>
-• <𝖼𝗈𝖽𝖾>/addchannel </𝖼𝗈𝖽𝖾><𝖻>@𝖬𝗈_𝖳𝖾𝖼𝗁_𝖸𝖳\𝗇</𝖻>
+• <code>/addchannel </code><b>𝖼𝗁𝖺𝗍_𝗂𝖽</b>
+• <code>/addchannel </code><b>@𝖬𝗈_𝖳𝖾𝖼𝗁_𝖸𝖳\𝗇</b>
 - 𝖳𝗈 𝖢𝗈𝗇𝗇𝖾𝖼𝗍 𝖠 𝖦𝗋𝗈𝗎𝗉 𝖶𝗂𝗍𝗁 𝖠 𝖢𝗁𝖺𝗇𝗇𝖾𝗅 (𝖡𝗈𝗍 𝖲𝗁𝗈𝗎𝗅𝖽 𝖡𝖾 𝖠𝖽𝗆𝗂𝗇 𝖶𝗂𝗍𝗁 𝖥𝗎𝗅𝗅 𝖯𝗋𝖾𝗏𝗂𝗅𝖺𝗀𝖾𝗌 𝖨𝗇 𝖡𝗈𝗍𝗁 𝖦𝗋𝗈𝗎𝗉 𝖠𝗇𝖽 𝖢𝗁𝖺𝗇𝗇𝖾𝗅)
 
 <𝖻><𝗎>𝖣𝖾𝗅𝖾𝗍𝖾𝖽 𝖢𝖬𝖣</𝖻></𝗎>
-• <𝖼𝗈𝖽𝖾>/delchannel </𝖼𝗈𝖽𝖾><𝖻>𝖼𝗁𝖺𝗍_𝗂𝖽</𝖻>
-• <𝖼𝗈𝖽𝖾>/delchannel </𝖼𝗈𝖽𝖾><𝖻>@𝖬𝗈_𝖳𝖾𝖼𝗁_𝖸𝖳</𝖻>
+• <code>/delchannel </code><b>𝖼𝗁𝖺𝗍_𝗂𝖽</b>
+• <code>/delchannel </code><b>@𝖬𝗈_𝖳𝖾𝖼𝗁_𝖸𝖳</b>
 - 𝖳𝗈 𝖽𝗂𝗌𝖼𝗈𝗇𝗇𝖾𝖼𝗍 𝖠 𝖦𝗋𝗈𝗎𝗉 𝖶𝗂𝗍𝗁 𝖠 𝖢𝗁𝖺𝗇𝗇𝖾𝗅
 """
     AUTO_FILTER_2_TEXH = """
 <b><u>📃 MAIN INFORMATION 📃</u></b>
 
 • <b>/settings</b> - This Command Will Display You A Settings Pannel Instance Which Can Be Used To Tweek Bot's Settings Accordingly
-• <b>Channel</b> - <b>Button Will Show You All The Connected Chats With The Group And Will Show Buttons Correspnding To There Order For Furthur Controls
-• <b>Filter Types</b> - <b>Button Will Show You The 3 Filter Option Available In Bot... Pressing Each Buttons Will Either Enable or Disable Them And This Will Take Into Action As Soon As You Use Them Without The Need Of A Restart
-• <b>Configure</b> - <b>Button Will Helps You To Change No. of Pages/ Buttons Per Page/ Total Result Without Acutally Editing The Repo... Also It Provide Option To Enable/Disable For Showing Invite Link In Each Results
+• <b>Channel</b> - Button Will Show You All The Connected Chats With The Group And Will Show Buttons Correspnding To There Order For Furthur Controls
+• <b>Filter Types</b> - Button Will Show You The 3 Filter Option Available In Bot... Pressing Each Buttons Will Either Enable or Disable Them And This Will Take Into Action As Soon As You Use Them Without The Need Of A Restart
+• <b>Configure</b> - Button Will Helps You To Change No. of Pages/ Buttons Per Page/ Total Result Without Acutally Editing The Repo... Also It Provide Option To Enable/Disable For Showing Invite Link In Each Results
 """
     PURGE_TEXT = """
 𝖧𝖾𝗅𝗉: <b><u>𝖯𝗎𝗋𝗀𝖾:-

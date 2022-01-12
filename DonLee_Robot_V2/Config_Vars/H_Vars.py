@@ -8,5 +8,5 @@ from DonLee_Robot_V2 import Import
 # Covid 19-20
 API = "https://api.sumanjay.cf/covid/?country="
 # Support Buttons
-BUTTONS = Import.Markup([[Import.Button("𝖲𝗎𝗉𝗉𝗈𝗋𝗍 𝖦𝗋𝗈𝗎𝗉", url='https://t.me/Mo_Tech_group')]])
+BUTTONS = Import.Markup([[Import.Button("🔰 𝖲𝗎𝗉𝗉𝗈𝗋𝗍 𝖦𝗋𝗈𝗎𝗉 🔰", url='https://t.me/Mo_Tech_group')]])
 

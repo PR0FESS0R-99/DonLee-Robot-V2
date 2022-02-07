@@ -23,14 +23,14 @@ async def start(bot: DonLee_Robot_V2, msg: Import.Msg):
             InlineKeyboardButton('♻️ ΛBOUT ♻️', callback_data='about')
             ],[
             InlineKeyboardButton('💠 SΞΛᏒCH HΞᏒΞ 💠', switch_inline_query_current_chat='')
-        ]]  
+        ]]
     if not await db.is_user_exist(msg.from_user.id):
         await db.add_user(msg.from_user.id)
     try:
         file_uid = msg.command[1]
     except IndexError:
         file_uid = False
-             
+
     if file_uid:
         try:
             user = await bot.get_chat_member(Config.FORCE_CHANNEL, msg.chat.id)
@@ -49,14 +49,14 @@ async def start(bot: DonLee_Robot_V2, msg: Import.Msg):
             return
 
         file_id, file_name, file_caption, file_type = await db.get_file(file_uid)
-        
-        if (file_id or file_type) == None:
+
+        if ((file_id or file_type)) is None:
             return
 
         if Config.CAPTION_BOLD_OR_MONO == "bold":
             caption = ("<b>" + file_name + "</b>")
         else:
-            caption = ("<code>" + file_name + "</code>")
+            caption = f'<code>{file_name}</code>'
         try:
             await msg.reply_cached_media(
                 file_id,

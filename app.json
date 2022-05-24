@@ -15,7 +15,7 @@
         "Bot"
     ],
     "website": "https://youtube.com/c/MoTech_YT",
-    "repository": "https://github.com/PR0FESS0R-99/DonLee-Robot-V2",
+    "repository": "https://github.com/YT-04/DonLee-Robot-V2",
     "success_url": "https://youtube.com/c/MoTech_YT",
     "env": {
         "API_ID": {
